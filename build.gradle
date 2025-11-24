@@ -1,0 +1,49 @@
+plugins {
+    id "java"
+}
+
+ext.lwjglVersion = "3.3.4"
+ext.lwjglNatives = "natives-windows"
+
+group = "com.theuran"
+version = "1.0"
+
+repositories {
+    mavenCentral()
+}
+
+jar {
+    manifest {
+        attributes "Main-Class": "com.theuran.Launcher", "Class-Path": "dependencies/bbs-engine-0.1.jar"
+    }
+}
+
+compileJava {
+    archivesBaseName = "launcher"
+    version = ""
+    source = sourceSets.main.java
+}
+
+dependencies {
+    implementation files("libs/bbs-engine-0.1.jar")
+    implementation "org.lwjgl:lwjgl:$lwjglVersion"
+    implementation "org.lwjgl:lwjgl-glfw:$lwjglVersion"
+    implementation "org.lwjgl:lwjgl-openal:$lwjglVersion"
+    implementation "org.lwjgl:lwjgl-opengl:$lwjglVersion"
+    implementation "org.lwjgl:lwjgl-stb:$lwjglVersion"
+    implementation "org.lwjgl:lwjgl:$lwjglVersion:$lwjglNatives"
+    implementation "org.lwjgl:lwjgl-glfw:$lwjglVersion:$lwjglNatives"
+    implementation "org.lwjgl:lwjgl-openal:$lwjglVersion:$lwjglNatives"
+    implementation "org.lwjgl:lwjgl-opengl:$lwjglVersion:$lwjglNatives"
+    implementation "org.lwjgl:lwjgl-stb:$lwjglVersion:$lwjglNatives"
+    implementation "org.greenrobot:eventbus-java:3.3.1"
+    implementation "org.joml:joml:1.9.2"
+}
+
+/* Copy runtime libraries for building */
+tasks.register("copyRuntimeLibs", Copy) {
+    from sourceSets.main.compileClasspath
+    into "build/libs/dependencies/"
+}
+
+tasks.build.dependsOn.add("copyRuntimeLibs")
