@@ -1,6 +1,5 @@
 package com.theuran.app;
 
-import mchorse.bbs.bridge.IBridgeWorld;
 import mchorse.bbs.data.types.MapType;
 import mchorse.bbs.graphics.window.Window;
 import mchorse.bbs.resources.Link;
@@ -13,7 +12,6 @@ import mchorse.bbs.utils.cli.ArgumentType;
 import org.lwjgl.Version;
 import org.lwjgl.glfw.Callbacks;
 import org.lwjgl.glfw.GLFW;
-import org.lwjgl.opengl.GL11;
 
 import javax.swing.*;
 import java.io.File;

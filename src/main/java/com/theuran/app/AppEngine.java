@@ -1,7 +1,6 @@
 package com.theuran.app;
 
 import com.theuran.app.bridge.BridgeMenu;
-import com.theuran.app.ui.UIMainMenu;
 import com.theuran.app.ui.UIScreen;
 import mchorse.bbs.BBS;
 import mchorse.bbs.BBSData;
@@ -9,13 +8,11 @@ import mchorse.bbs.BBSSettings;
 import mchorse.bbs.bridge.IBridge;
 import mchorse.bbs.bridge.IBridgeMenu;
 import mchorse.bbs.core.Engine;
-import mchorse.bbs.core.input.MouseInput;
 import mchorse.bbs.data.DataToString;
 import mchorse.bbs.events.L10nReloadEvent;
 import mchorse.bbs.events.UpdateEvent;
 import mchorse.bbs.events.register.RegisterL10nEvent;
 import mchorse.bbs.graphics.GLStates;
-import mchorse.bbs.graphics.shaders.ShaderRepository;
 import mchorse.bbs.graphics.window.IFileDropListener;
 import mchorse.bbs.graphics.window.Window;
 import mchorse.bbs.l10n.L10n;
@@ -48,12 +45,10 @@ public class AppEngine extends Engine implements IBridge, IFileDropListener {
         BBS.registerFactories();
         BBS.registerFoundation();
 
-        this.renderer = new AppRenderer(this);
-        this.screen = new UIScreen(this);
-
         this.registerMiscellaneous();
 
-        BBS.getShaders().setReloadCallback(this.renderer::reloadShaders);
+        this.screen = new UIScreen(this);
+        this.renderer = new AppRenderer(this);
     }
 
     @Subscribe

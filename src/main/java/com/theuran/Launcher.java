@@ -23,11 +23,6 @@ public class Launcher {
         args.add("--gameDirectory");
         args.add(gameDirectory);
 
-        if (settings.has("game.world")) {
-            args.add("-dw");
-            args.add(settings.getString("game.world"));
-        }
-
         if (settings.has("game.width")) {
             args.add("-ww");
             args.add(String.valueOf(settings.getInt("game.width")));
@@ -36,10 +31,6 @@ public class Launcher {
         if (settings.has("game.height")) {
             args.add("-wh");
             args.add(String.valueOf(settings.getInt("game.height")));
-        }
-
-        if (settings.getBool("game.development")) {
-            args.add("--development");
         }
 
         try {

@@ -1,7 +1,6 @@
 package com.theuran.app.ui;
 
 import com.theuran.app.App;
-import mchorse.bbs.BBSSettings;
 import mchorse.bbs.bridge.IBridge;
 import mchorse.bbs.graphics.window.Window;
 import mchorse.bbs.l10n.keys.IKey;
@@ -9,33 +8,34 @@ import mchorse.bbs.resources.Link;
 import mchorse.bbs.ui.framework.UIBaseMenu;
 import mchorse.bbs.ui.framework.UIRenderingContext;
 import mchorse.bbs.ui.framework.elements.UIElement;
-import mchorse.bbs.ui.framework.elements.buttons.UIButton;
-import mchorse.bbs.ui.utils.UI;
-import mchorse.bbs.utils.math.MathUtils;
+import mchorse.bbs.ui.framework.elements.buttons.UIIcon;
+import mchorse.bbs.ui.utils.icons.Icons;
 
 public class UIMainMenu extends UIBaseMenu {
-    private final UIButton button;
-    private UIButton play;
-    private UIButton openUpgrades;
-    private UIButton quit;
-    private UIButton cycleUIScale;
-    private UIElement column;
-
     public UIMainMenu(IBridge bridge) {
         super(bridge);
 
-        this.button = new UIButton(IKey.raw("Нажми меня"), (b) -> {
-            System.out.println("Кнопка нажата!");
+        UIElement fimoz = new UIElement();
+
+        fimoz.grid(20)
+                .width(20)
+                .padding(20);
+
+        fimoz.relative(this.main).full()
+                .x(0.5f).y(0.5f)
+                .anchor(0.5f);
+
+        Icons.ICONS.forEach((id, icon) -> {
+            UIIcon value = new UIIcon(icon, callback -> {
+                Window.setClipboard(id);
+            });
+
+            value.tooltip(IKey.raw("Key id: " + id));
+
+            fimoz.add(value);
         });
 
-        this.button.relative(this.main)
-                .x(0.5F)
-                .y(0.5F)
-                .w(100)
-                .h(20)
-                .anchor(0.5F, 0.5F);
-
-        this.main.add(this.button);
+        this.main.add(fimoz);
     }
 
     @Override
@@ -44,9 +44,9 @@ public class UIMainMenu extends UIBaseMenu {
     }
 
     @Override
-    public void renderMenu(UIRenderingContext context, int mouseX, int mouseY) {
-        context.batcher.box(this.main.area.x, this.main.area.y, this.main.area.ex(), this.main.area.ey(), 0xFF333333);
+    protected void preRenderMenu(UIRenderingContext context) {
+        super.preRenderMenu(context);
 
-        super.renderMenu(context, mouseX, mouseY);
+        this.renderDefaultBackground();
     }
 }

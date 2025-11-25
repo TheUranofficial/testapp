@@ -4,7 +4,6 @@ import com.theuran.app.AppEngine;
 import mchorse.bbs.BBSSettings;
 import mchorse.bbs.core.IEngine;
 import mchorse.bbs.core.input.MouseInput;
-import mchorse.bbs.graphics.RenderingContext;
 import mchorse.bbs.graphics.shaders.ShaderRepository;
 import mchorse.bbs.graphics.window.IFileDropListener;
 import mchorse.bbs.graphics.window.Window;

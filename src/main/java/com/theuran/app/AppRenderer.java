@@ -2,13 +2,15 @@ package com.theuran.app;
 
 import mchorse.bbs.BBS;
 import mchorse.bbs.core.IComponent;
-import mchorse.bbs.graphics.GLStates;
+import mchorse.bbs.graphics.Framebuffer;
 import mchorse.bbs.graphics.RenderingContext;
-import mchorse.bbs.graphics.shaders.Shader;
-import mchorse.bbs.graphics.shaders.pipeline.ShaderPipeline;
 import mchorse.bbs.graphics.text.FontRenderer;
+import mchorse.bbs.graphics.texture.Texture;
 import mchorse.bbs.graphics.ubo.ProjectionViewUBO;
 import mchorse.bbs.resources.Link;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL13;
+import org.lwjgl.opengl.GL30;
 
 public class AppRenderer implements IComponent {
     public AppEngine engine;
@@ -17,11 +19,8 @@ public class AppRenderer implements IComponent {
 
     public ProjectionViewUBO ubo;
 
-    public Shader finalShader;
-
-    private ShaderPipeline pipeline = new ShaderPipeline();
-    private AppShaders shaders = new AppShaders(this.pipeline);
-    private AppShaders targetShaders = new AppShaders(this.pipeline);
+    public Framebuffer finalFramebuffer;
+    public Framebuffer tmpFramebuffer;
 
     private int ticks;
 
@@ -46,16 +45,25 @@ public class AppRenderer implements IComponent {
     }
 
     private void setupShaderPipeline() {
-        this.shaders.reload();
-        this.targetShaders.reload();
+        this.finalFramebuffer = BBS.getFramebuffers().getFramebuffer(Link.bbs("final"), (framebuffer) -> {
+            Texture texture = new Texture();
 
-        for (AppShaders.Stage stage : this.shaders.stages) {
-            stage.shader.attachUBO(this.context.getLights(), "u_lights_block");
-        }
+            texture.setFilter(GL11.GL_LINEAR);
+            texture.setWrap(GL13.GL_CLAMP_TO_EDGE);
 
-        for (AppShaders.Stage stage : this.targetShaders.stages) {
-            stage.shader.attachUBO(this.context.getLights(), "u_lights_block");
-        }
+            framebuffer.deleteTextures().attach(texture, GL30.GL_COLOR_ATTACHMENT0);
+            framebuffer.unbind();
+        });
+
+        this.tmpFramebuffer = BBS.getFramebuffers().getFramebuffer(Link.bbs("tmp"), (framebuffer) -> {
+            Texture texture = new Texture();
+
+            texture.setFilter(GL11.GL_LINEAR);
+            texture.setWrap(GL13.GL_CLAMP_TO_EDGE);
+
+            framebuffer.deleteTextures().attach(texture, GL30.GL_COLOR_ATTACHMENT0);
+            framebuffer.unbind();
+        });
     }
 
     public void render(float transition) {
@@ -67,17 +75,13 @@ public class AppRenderer implements IComponent {
         this.context.setTransition(transition);
 
         if (this.engine.screen.canRefresh()) {
-            context.stack.reset();
-
-            GLStates.activeTexture(0);
-            GLStates.resetViewport();
         }
 
         this.context.runRunnables();
     }
 
     public void resize(int width, int height) {
-        this.shaders.resize(width, height);
+
     }
 
     public void reloadShaders(Boolean bool) {
